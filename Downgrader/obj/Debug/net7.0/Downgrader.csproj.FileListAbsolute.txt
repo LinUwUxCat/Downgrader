@@ -1,0 +1,5 @@
+/home/linuxcat/gbx-search/Downgrader/Downgrader/obj/Debug/net7.0/Downgrader.csproj.AssemblyReference.cache
+/home/linuxcat/gbx-search/Downgrader/Downgrader/obj/Debug/net7.0/Downgrader.GeneratedMSBuildEditorConfig.editorconfig
+/home/linuxcat/gbx-search/Downgrader/Downgrader/obj/Debug/net7.0/Downgrader.AssemblyInfoInputs.cache
+/home/linuxcat/gbx-search/Downgrader/Downgrader/obj/Debug/net7.0/Downgrader.AssemblyInfo.cs
+/home/linuxcat/gbx-search/Downgrader/Downgrader/obj/Debug/net7.0/Downgrader.csproj.CoreCompileInputs.cache

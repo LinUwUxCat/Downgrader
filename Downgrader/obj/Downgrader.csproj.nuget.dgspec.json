@@ -1,0 +1,80 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/linuxcat/gbx-search/Downgrader/Downgrader/Downgrader.csproj": {}
+  },
+  "projects": {
+    "/home/linuxcat/gbx-search/Downgrader/Downgrader/Downgrader.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/linuxcat/gbx-search/Downgrader/Downgrader/Downgrader.csproj",
+        "projectName": "Downgrader",
+        "projectPath": "/home/linuxcat/gbx-search/Downgrader/Downgrader/Downgrader.csproj",
+        "packagesPath": "/home/linuxcat/.nuget/packages/",
+        "outputPath": "/home/linuxcat/gbx-search/Downgrader/Downgrader/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/home/linuxcat/.local/share/godot/mono/GodotNuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/linuxcat/.nuget/NuGet/NuGet.Config",
+          "/home/linuxcat/.nuget/NuGet/config/Godot.Offline.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/bigbang1112-cz/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "GBX.NET": {
+              "target": "Package",
+              "version": "[1.2.0, )"
+            },
+            "GBX.NET.LZO": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            },
+            "GbxToolAPI": {
+              "target": "Package",
+              "version": "[1.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/linuxcat/.dotnet/sdk/7.0.100/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

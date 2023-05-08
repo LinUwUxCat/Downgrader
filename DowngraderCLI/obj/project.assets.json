@@ -1,0 +1,383 @@
+{
+  "version": 3,
+  "targets": {
+    "net7.0": {
+      "GBX.NET/1.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
+          "TmEssentials": "2.3.2"
+        },
+        "compile": {
+          "lib/net7.0/GBX.NET.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/GBX.NET.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "GBX.NET.LZO/1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/GBX.NET.LZO.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/GBX.NET.LZO.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "GbxToolAPI/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "GBX.NET": "1.2.0",
+          "GBX.NET.LZO": "1.0.2",
+          "YamlDotNet": "13.1.0"
+        },
+        "compile": {
+          "lib/net7.0/GbxToolAPI.dll": {}
+        },
+        "runtime": {
+          "lib/net7.0/GbxToolAPI.dll": {}
+        }
+      },
+      "GbxToolAPI.CLI/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "GbxToolAPI": "1.0.3"
+        },
+        "compile": {
+          "lib/net7.0/GbxToolAPI.CLI.dll": {}
+        },
+        "runtime": {
+          "lib/net7.0/GbxToolAPI.CLI.dll": {}
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
+        }
+      },
+      "TmEssentials/2.3.2": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/TmEssentials.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/TmEssentials.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "YamlDotNet/13.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/YamlDotNet.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/YamlDotNet.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Downgrader/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "GBX.NET": "1.2.0",
+          "GBX.NET.LZO": "1.0.2",
+          "GbxToolAPI": "1.0.3"
+        },
+        "compile": {
+          "bin/placeholder/Downgrader.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Downgrader.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "GBX.NET/1.2.0": {
+      "sha512": "69dED0wceVnOgIYbdvG3/mbmaq39Ype90wBdAG8mRedCqSd6czXBOA470yatEk2g6cv8nLyjILrTBlIumLn18Q==",
+      "type": "package",
+      "path": "gbx.net/1.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "gbx.net.1.2.0.nupkg.sha512",
+        "gbx.net.nuspec",
+        "lib/net462/GBX.NET.dll",
+        "lib/net462/GBX.NET.xml",
+        "lib/net6.0/GBX.NET.dll",
+        "lib/net6.0/GBX.NET.xml",
+        "lib/net7.0/GBX.NET.dll",
+        "lib/net7.0/GBX.NET.xml",
+        "lib/netstandard2.0/GBX.NET.dll",
+        "lib/netstandard2.0/GBX.NET.xml",
+        "lib/netstandard2.1/GBX.NET.dll",
+        "lib/netstandard2.1/GBX.NET.xml"
+      ]
+    },
+    "GBX.NET.LZO/1.0.2": {
+      "sha512": "Q4HJwGtnKwAtv9Uioxs6yshhNKV1VpqUbvjh7+tIcyCwVHzvCH3QUTRXrOdUY6oEgdgzl9+L4KrELl7kj8q5YQ==",
+      "type": "package",
+      "path": "gbx.net.lzo/1.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "gbx.net.lzo.1.0.2.nupkg.sha512",
+        "gbx.net.lzo.nuspec",
+        "lib/net462/GBX.NET.LZO.dll",
+        "lib/net462/GBX.NET.LZO.xml",
+        "lib/net6.0/GBX.NET.LZO.dll",
+        "lib/net6.0/GBX.NET.LZO.xml",
+        "lib/netstandard2.0/GBX.NET.LZO.dll",
+        "lib/netstandard2.0/GBX.NET.LZO.xml",
+        "lib/netstandard2.1/GBX.NET.LZO.dll",
+        "lib/netstandard2.1/GBX.NET.LZO.xml"
+      ]
+    },
+    "GbxToolAPI/1.0.3": {
+      "sha512": "jX6kinInKIjZFfwJAwPjCNByVKptBcc4/bpES0YfwdUip2SNmQL9HV3VWcICDrx4z3UPffFf0nvruA5rKWqePg==",
+      "type": "package",
+      "path": "gbxtoolapi/1.0.3",
+      "files": [
+        ".nupkg.metadata",
+        "gbxtoolapi.1.0.3.nupkg.sha512",
+        "gbxtoolapi.nuspec",
+        "lib/net7.0/GbxToolAPI.dll"
+      ]
+    },
+    "GbxToolAPI.CLI/1.0.3": {
+      "sha512": "VJMia0Fm5ZhhxHNGvelaEF4iG7twBfBib1TQMSvjsHC4Rw5y5nekWg1k+a7+e+hvEo6c6qtAcXETrSiMB5o/0g==",
+      "type": "package",
+      "path": "gbxtoolapi.cli/1.0.3",
+      "files": [
+        ".nupkg.metadata",
+        "gbxtoolapi.cli.1.0.3.nupkg.sha512",
+        "gbxtoolapi.cli.nuspec",
+        "lib/net7.0/GbxToolAPI.CLI.dll"
+      ]
+    },
+    "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
+      "sha512": "kmn78+LPVMOWeITUjIlfxUPDsI0R6G0RkeAMBmQxAJ7vBJn4q2dTva7pWi65ceN5vPGjJ9q/Uae2WKgvfktJAw==",
+      "type": "package",
+      "path": "microsoft.extensions.logging.abstractions/7.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "analyzers/dotnet/roslyn3.11/cs/Microsoft.Extensions.Logging.Generators.dll",
+        "analyzers/dotnet/roslyn3.11/cs/cs/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/de/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/es/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/fr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/it/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ja/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ko/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/pl/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/pt-BR/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ru/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/Microsoft.Extensions.Logging.Generators.dll",
+        "analyzers/dotnet/roslyn4.0/cs/cs/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/de/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/es/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/fr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/it/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ja/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ko/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/pl/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/pt-BR/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ru/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Logging.Generators.dll",
+        "analyzers/dotnet/roslyn4.4/cs/cs/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/de/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/es/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/fr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/it/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ja/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ko/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/pl/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/pt-BR/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ru/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "buildTransitive/net461/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/net462/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+        "microsoft.extensions.logging.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "TmEssentials/2.3.2": {
+      "sha512": "YTlWJQdROADpnL5eTvMGu8gjKA95p93U90hznZgnzUCxqIppmRgYX6cmw11cGyhglSOmonXJRvd2YK8g75bdPg==",
+      "type": "package",
+      "path": "tmessentials/2.3.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/TmEssentials.dll",
+        "lib/net462/TmEssentials.xml",
+        "lib/net6.0/TmEssentials.dll",
+        "lib/net6.0/TmEssentials.xml",
+        "lib/netstandard2.0/TmEssentials.dll",
+        "lib/netstandard2.0/TmEssentials.xml",
+        "lib/netstandard2.1/TmEssentials.dll",
+        "lib/netstandard2.1/TmEssentials.xml",
+        "tmessentials.2.3.2.nupkg.sha512",
+        "tmessentials.nuspec"
+      ]
+    },
+    "YamlDotNet/13.1.0": {
+      "sha512": "S4tzJjofMDx8PKtbnwkaMznbPD1aUffVKW+ClhfOGAYFIPuY9sSrArcFQOcRkbwRP1kYIaMbXk4Vsnfk3dE3dQ==",
+      "type": "package",
+      "path": "yamldotnet/13.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "images/yamldotnet.png",
+        "lib/net35/YamlDotNet.dll",
+        "lib/net35/YamlDotNet.xml",
+        "lib/net45/YamlDotNet.dll",
+        "lib/net45/YamlDotNet.xml",
+        "lib/net47/YamlDotNet.dll",
+        "lib/net47/YamlDotNet.xml",
+        "lib/net6.0/YamlDotNet.dll",
+        "lib/net6.0/YamlDotNet.xml",
+        "lib/net7.0/YamlDotNet.dll",
+        "lib/net7.0/YamlDotNet.xml",
+        "lib/netstandard2.0/YamlDotNet.dll",
+        "lib/netstandard2.0/YamlDotNet.xml",
+        "lib/netstandard2.1/YamlDotNet.dll",
+        "lib/netstandard2.1/YamlDotNet.xml",
+        "yamldotnet.13.1.0.nupkg.sha512",
+        "yamldotnet.nuspec"
+      ]
+    },
+    "Downgrader/1.0.0": {
+      "type": "project",
+      "path": "../Downgrader/Downgrader.csproj",
+      "msbuildProject": "../Downgrader/Downgrader.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net7.0": [
+      "Downgrader >= 1.0.0",
+      "GbxToolAPI.CLI >= 1.0.3"
+    ]
+  },
+  "packageFolders": {
+    "/home/linuxcat/.nuget/packages/": {},
+    "/home/linuxcat/.local/share/godot/mono/GodotNuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/home/linuxcat/gbx-search/Downgrader/DowngraderCLI/DowngraderCLI.csproj",
+      "projectName": "DowngraderCLI",
+      "projectPath": "/home/linuxcat/gbx-search/Downgrader/DowngraderCLI/DowngraderCLI.csproj",
+      "packagesPath": "/home/linuxcat/.nuget/packages/",
+      "outputPath": "/home/linuxcat/gbx-search/Downgrader/DowngraderCLI/obj/",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "/home/linuxcat/.local/share/godot/mono/GodotNuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "/home/linuxcat/.nuget/NuGet/NuGet.Config",
+        "/home/linuxcat/.nuget/NuGet/config/Godot.Offline.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net7.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {},
+        "https://nuget.pkg.github.com/bigbang1112-cz/index.json": {}
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "projectReferences": {
+            "/home/linuxcat/gbx-search/Downgrader/Downgrader/Downgrader.csproj": {
+              "projectPath": "/home/linuxcat/gbx-search/Downgrader/Downgrader/Downgrader.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net7.0": {
+        "targetAlias": "net7.0",
+        "dependencies": {
+          "GbxToolAPI.CLI": {
+            "target": "Package",
+            "version": "[1.0.3, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/home/linuxcat/.dotnet/sdk/7.0.100/RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

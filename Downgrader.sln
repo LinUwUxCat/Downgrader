@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downgrader", "Downgrader\Downgrader.csproj", "{540B2C91-89AB-42F2-B605-C119E8B3084D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowngraderCLI", "DowngraderCLI\DowngraderCLI.csproj", "{4338918B-15ED-4FEF-AC5A-80070292168B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{540B2C91-89AB-42F2-B605-C119E8B3084D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{540B2C91-89AB-42F2-B605-C119E8B3084D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{540B2C91-89AB-42F2-B605-C119E8B3084D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{540B2C91-89AB-42F2-B605-C119E8B3084D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4338918B-15ED-4FEF-AC5A-80070292168B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4338918B-15ED-4FEF-AC5A-80070292168B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4338918B-15ED-4FEF-AC5A-80070292168B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4338918B-15ED-4FEF-AC5A-80070292168B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
