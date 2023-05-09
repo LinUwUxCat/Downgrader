@@ -176,6 +176,6 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>{
 
         map.MapName = "[D]" + map.MapName;
 
-        return new(map, map.MapName, false);
+        return new(map, map.MapName + "Challenge.Gbx", false);
     }
 }
