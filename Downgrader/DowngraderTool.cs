@@ -159,7 +159,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
             //Do things
             var newBlocks = new List<CGameCtnMediaBlock>();
             foreach (var block in track.Blocks){
-                if (!TMNF.MediaBlocks.Contains(block.GetType()))continue;
+                if (!MediaBlocks.TMNF.Contains(block.GetType()))continue;
                 //Note : BloomHdr is not FxBloom, Depth Of Field is not FxBlurdepth
                 if (block is CGameCtnMediaBlockCameraPath cameraPath){
                     cameraPath.Chunks.Remove<CGameCtnMediaBlockCameraPath.Chunk030A1003>();
@@ -240,6 +240,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     }
 
     IList<CGameCtnBlock> downgradeBlockList(IList<CGameCtnBlock> initialBlocks){
+        if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
         var newBlockList = new List<CGameCtnBlock>();
         foreach (var block in initialBlocks){
             var yOffset = 8; //TM2 maps are 8 blocks higher than TMNF's
