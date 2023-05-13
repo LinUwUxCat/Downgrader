@@ -1,7 +1,6 @@
 using GBX.NET;
 using GBX.NET.Engines.Game;
 using GbxToolAPI;
-using Blocklist;
 
 namespace Downgrader;
 
@@ -9,14 +8,27 @@ namespace Downgrader;
 [ToolDescription("Downgrade a TM2 Stadium Map to TMNF")]
 [ToolAuthors("LinuxCat")]
 [ToolGitHub("LinUwUxCat/Downgrader")]
-public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>{
+[ToolAssets("Downgrader")]
+[ToolAssetsIgnoreIngame("BlockList")]
+public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IHasAssets{
 
     private CGameCtnChallenge map;
+
+    public BlockList? TMNF { get; private set; } // public will be useful on the web
 
     public DowngraderTool(CGameCtnChallenge map){
         this.map = map;
     }
 
+    public static string RemapAssetRoute(string route, bool isManiaPlanet)
+    {
+        return ""; // everything should stay the same
+    }
+
+    public async ValueTask LoadAssetsAsync()
+    {
+        TMNF = await AssetsManager<DowngraderTool>.GetFromYmlAsync<BlockList>(Path.Combine("BlockList", "TMNF.yml"));
+    }
 
     public NodeFile<CGameCtnChallenge> Produce(){
 
@@ -24,9 +36,10 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>{
         if (!GameVersion.IsManiaPlanet(map))throw new("Only Maniaplanet maps are supported!");
         if (map.Collection != "Stadium")throw new("Only TM2 Stadium maps are supported!");
         if (map.PlayerModel!=null&& !new String[]{"American", "SnowCar", "Rally", "SportCar", "CoastCar", "BayCar", "StadiumCar", ""}.Contains(map.PlayerModel.Id))throw new("The provided car isn't supported!");
+        if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
 
         /* Removing: */
-        
+
         //Author stuff
         map.HeaderChunks.Remove(0x03043008); //Remove "author" header chunk
         map.Chunks.Remove(0x03043042); //Remove "author" body chunk

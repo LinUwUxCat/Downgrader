@@ -1,15 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="GBX.NET" Version="1.2.0" />
-    <PackageReference Include="GBX.NET.LZO" Version="1.0.2" />
-    <PackageReference Include="GbxToolAPI" Version="1.0.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="GBX.NET" Version="1.2.0" />
+		<PackageReference Include="GBX.NET.LZO" Version="1.0.2" />
+		<PackageReference Include="GbxToolAPI" Version="1.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Assets\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Assets\Tools\Downgrader\BlockList\" />
+	</ItemGroup>
 
 </Project>
