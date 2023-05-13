@@ -18,8 +18,4 @@
 		</None>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Assets\Tools\Downgrader\BlockList\" />
-	</ItemGroup>
-
 </Project>
