@@ -205,14 +205,8 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
                         sound.Chunks.Add(soundChunk003);
                     }
                 } else if (block is CGameCtnMediaBlockGhost mediaBlockGhost){
-                    mediaBlockGhost.Chunks.Remove<CGameCtnMediaBlockGhost.Chunk030E5002>();
-                    mediaBlockGhost.Chunks.Create<CGameCtnMediaBlockGhost.Chunk030E5001>();
-                    if (mediaBlockGhost.Keys!=null && mediaBlockGhost.Keys.Count>0){
-                        mediaBlockGhost.Start = mediaBlockGhost.Keys[0].Time;
-                        mediaBlockGhost.End = mediaBlockGhost.Keys[mediaBlockGhost.Keys.Count-1].Time;
-                    }
-                    mediaBlockGhost.GhostModel = downgradeGhost(mediaBlockGhost.GhostModel);
-
+                    //Ignore for now.
+                    continue;
                 }
                 newBlocks.Add(block);
             }
@@ -220,15 +214,6 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         }
 
         return clip;
-    }
-
-    CGameCtnGhost downgradeGhost(CGameCtnGhost initialGhost){
-        if (initialGhost.SkinPackDescs!=null){
-            for (var i=0; i<initialGhost.SkinPackDescs.Count; i++){
-                initialGhost.SkinPackDescs[i] = initialGhost.SkinPackDescs[i] with {Version = 2};
-            }
-        }
-        return initialGhost;
     }
 
     CGameCtnMediaClipGroup? downgradeClipGroup(CGameCtnMediaClipGroup? clipGroup){
@@ -239,43 +224,51 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         return clipGroup;
     }
 
-    IList<CGameCtnBlock> downgradeBlockList(IList<CGameCtnBlock> initialBlocks){
+    CGameCtnBlock? downgradeBlock(CGameCtnBlock initialBlock){
         if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
+
+        var yOffset = 8; //TM2 maps are 8 blocks higher than TMNF's
+        //Block-specific changes
+        if (initialBlock.Name=="StadiumWater2"){initialBlock.Name="StadiumWater";yOffset--;}                  //TM2 added a StadiumWater2 and StadiumPool2.
+        if (initialBlock.Name=="StadiumPool2"){initialBlock.Name="StadiumPool";yOffset--;}                    //The only thing they do is they have no offset, so i rename the block and cancel the offset.
+        if (initialBlock.Name == "StadiumCircuitToRoadMain")initialBlock.Name = "StadiumPlatformToRoadMain";  //TM2 made that block Circuit (Cube platform) instead of Platform, so we can just rename it.
+        
+        if (!TMNF.Blocks.Contains(initialBlock.Name))return null; //Ignore all non-TMNF blocks
+        
+        initialBlock.Bit17=false;                      //
+        initialBlock.Bit21=false;                      // Some TM2-only behaviors
+        initialBlock.WaypointSpecialProperty = null;   //
+        
+        switch (initialBlock.Name){ //Stupid block changes, because these don't have the same offset in TM2
+            case "StadiumPool":
+            case "StadiumWater":
+            case "StadiumDirtBorder":
+            case "StadiumDirt":
+                yOffset++;
+                break;
+            case "StadiumDirtHill":
+                yOffset--;
+                break;
+            default:
+                break;
+        }
+        initialBlock.Coord += (0,-yOffset,0); //Apply offset
+        if (initialBlock.Coord.Y <= 0 || initialBlock.Coord.Y >= 32){
+            if (!(initialBlock.Coord.Y == 0 && new String[]{"StadiumPool","StadiumWater","StadiumDirtBorder","StadiumDirt"}.Contains(initialBlock.Name)))return null; 
+        }
+        if (initialBlock.Skin!=null){  //Changing packdesc version (yes, this causes a crash if not done)
+            if (initialBlock.Skin.PackDesc!=null)initialBlock.Skin.PackDesc=initialBlock.Skin.PackDesc with {Version=2};
+            if (initialBlock.Skin.ParentPackDesc!=null)initialBlock.Skin.ParentPackDesc=initialBlock.Skin.ParentPackDesc with {Version=2};
+            initialBlock.Skin.Text = "";
+        }
+        return initialBlock;
+    }
+
+    IList<CGameCtnBlock> downgradeBlockList(IList<CGameCtnBlock> initialBlocks){
         var newBlockList = new List<CGameCtnBlock>();
         foreach (var block in initialBlocks){
-            var yOffset = 8; //TM2 maps are 8 blocks higher than TMNF's
-            //Block-specific changes
-            if (block.Name=="StadiumWater2"){block.Name="StadiumWater";yOffset--;}                  //TM2 added a StadiumWater2 and StadiumPool2.
-            if (block.Name=="StadiumPool2"){block.Name="StadiumPool";yOffset--;}                    //The only thing they do is they have no offset, so i rename the block and cancel the offset.
-            if (block.Name == "StadiumCircuitToRoadMain")block.Name = "StadiumPlatformToRoadMain";  //TM2 made that block Circuit (Cube platform) instead of Platform, so we can just rename it.
-            if (!TMNF.Blocks.Contains(block.Name))continue; //Ignore all non-TMNF blocks
-            block.Bit17=false;                      //
-            block.Bit21=false;                      // Some TM2-only behaviors
-            block.WaypointSpecialProperty = null;   //
-            
-            switch (block.Name){ //Stupid block changes, because these don't have the same offset in TM2
-                case "StadiumPool":
-                case "StadiumWater":
-                case "StadiumDirtBorder":
-                case "StadiumDirt":
-                    yOffset++;
-                    break;
-                case "StadiumDirtHill":
-                    yOffset--;
-                    break;
-                default:
-                    break;
-            }
-            block.Coord += (0,-yOffset,0); //Apply offset
-            if (block.Coord.Y <= 0 || block.Coord.Y >= 32){
-                if (!(block.Coord.Y == 0 && new String[]{"StadiumPool","StadiumWater","StadiumDirtBorder","StadiumDirt"}.Contains(block.Name)))continue; 
-            }
-            if (block.Skin!=null){  //Changing packdesc version (yes, this causes a crash if not done)
-                if (block.Skin.PackDesc!=null)block.Skin.PackDesc=block.Skin.PackDesc with {Version=2};
-                if (block.Skin.ParentPackDesc!=null)block.Skin.ParentPackDesc=block.Skin.ParentPackDesc with {Version=2};
-                block.Skin.Text = "";
-            }
-            newBlockList.Add(block);
+            CGameCtnBlock? newBlock = downgradeBlock(block);
+            if (newBlock!=null)newBlockList.Add(newBlock);
         }        
         return newBlockList;
     }
