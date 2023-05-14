@@ -126,69 +126,151 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
             map.ModPackDesc = map.ModPackDesc with {Version=2};
         }
 
-        
-        //Blocks
-        //Swap out chunk
+        //Swap out block chunk
         map.Chunks.Remove(0x0304301F);
         map.Chunks.Create(0x03043013);
         //Map size
         map.Size = new Int3(32,32,32);
 
-        if (map.Blocks==null){ //Why would anyone do this
-            map.Blocks = new List<CGameCtnBlock>();
-        } else {
-            var newBlockList = new List<CGameCtnBlock>();
-            foreach (var block in map.Blocks){
-                var yOffset = 8; //TM2 maps are 8 blocks higher than TMNF's
+        //Blocks
+        if (map.Blocks == null) map.Blocks = new List<CGameCtnBlock>();
+        else map.Blocks = downgradeBlockList(map.Blocks);
 
-                //Block-specific changes
-                if (block.Name=="StadiumWater2"){block.Name="StadiumWater";yOffset--;}                  //TM2 added a StadiumWater2 and StadiumPool2.
-                if (block.Name=="StadiumPool2"){block.Name="StadiumPool";yOffset--;}                    //The only thing they do is they have no offset, so i rename the block and cancel the offset.
-                if (block.Name == "StadiumCircuitToRoadMain")block.Name = "StadiumPlatformToRoadMain";  //TM2 made that block Circuit (Cube platform) instead of Platform, so we can just rename it.
-
-                if (!TMNF.Blocks.Contains(block.Name))continue; //Ignore all non-TMNF blocks
-
-                block.Bit17=false;                      //
-                block.Bit21=false;                      // Some TM2-only behaviors
-                block.WaypointSpecialProperty = null;   //
-                
-                switch (block.Name){ //Stupid block changes, because these don't have the same offset in TM2
-                    case "StadiumPool":
-                    case "StadiumWater":
-                    case "StadiumDirtBorder":
-                    case "StadiumDirt":
-                        yOffset++;
-                        break;
-                    case "StadiumDirtHill":
-                        yOffset--;
-                        break;
-                    default:
-                        break;
-                }
-
-                block.Coord += (0,-yOffset,0); //Apply offset
-
-                if (block.Coord.Y <= 0 || block.Coord.Y >= 32){
-                    if (!(block.Coord.Y == 0 && new String[]{"StadiumPool","StadiumWater","StadiumDirtBorder","StadiumDirt"}.Contains(block.Name)))continue; 
-                }
-
-                if (block.Skin!=null){  //Changing packdesc version (yes, this causes a crash if not done)
-                    if (block.Skin.PackDesc!=null)block.Skin.PackDesc=block.Skin.PackDesc with {Version=2};
-                    if (block.Skin.ParentPackDesc!=null)block.Skin.ParentPackDesc=block.Skin.ParentPackDesc with {Version=2};
-                    block.Skin.Text = "";
-                }
-
-                newBlockList.Add(block);
-            }
-            map.Blocks = newBlockList;
-        }
-
-        map.ClipIntro=null;
-        map.ClipGroupInGame=null;
-        map.ClipGroupEndRace=null;
+        //Mediatracker
+        map.ClipIntro=downgradeClip(map.ClipIntro);
+        map.ClipGroupInGame=downgradeClipGroup(map.ClipGroupInGame);
+        map.ClipGroupEndRace=downgradeClipGroup(map.ClipGroupEndRace);
 
         map.MapName = "[D]" + map.MapName;
 
-        return new(map, map.MapName + "Challenge.Gbx", false);
+        return new(map, map.MapName + ".Challenge.Gbx", false);
+    }
+
+    CGameCtnMediaClip? downgradeClip(CGameCtnMediaClip? clip){
+        if (clip==null)return null;
+        clip.Chunks.Remove<CGameCtnMediaClip.Chunk0307900D>();
+        clip.Chunks.Create(0x03079004);
+        clip.Chunks.Create(0x03079005);
+        clip.Chunks.Create(0x03079007);
+
+        foreach (var track in clip.Tracks){
+            track.Chunks.Remove<CGameCtnMediaTrack.Chunk03078005>();
+            track.Chunks.Create<CGameCtnMediaTrack.Chunk03078004>();
+            //Do things
+            var newBlocks = new List<CGameCtnMediaBlock>();
+            foreach (var block in track.Blocks){
+                if (!MediaBlocks.TMNF.Contains(block.GetType()))continue;
+                //Note : BloomHdr is not FxBloom, Depth Of Field is not FxBlurdepth
+                if (block is CGameCtnMediaBlockCameraPath cameraPath){
+                    cameraPath.Chunks.Remove<CGameCtnMediaBlockCameraPath.Chunk030A1003>();
+                    cameraPath.Chunks.Create<CGameCtnMediaBlockCameraPath.Chunk030A1002>();
+                } else if (block is CGameCtnMediaBlockCameraCustom cameraCustom){
+                    cameraCustom.Chunks.Remove<CGameCtnMediaBlockCameraCustom.Chunk030A2006>();
+                    cameraCustom.Chunks.Create<CGameCtnMediaBlockCameraCustom.Chunk030A2005>();
+                } else if (block is CGameCtnMediaBlockCameraGame cameraGame){
+                    cameraGame.Chunks.Remove<CGameCtnMediaBlockCameraGame.Chunk03084007>();
+                    cameraGame.Chunks.Create<CGameCtnMediaBlockCameraGame.Chunk03084003>();
+                    if (cameraGame.gameCam1!=null){
+                        switch (cameraGame.gameCam1){
+                            case CGameCtnMediaBlockCameraGame.EGameCam.Internal:
+                                cameraGame.gameCam = "Internal";
+                                break;
+                            case CGameCtnMediaBlockCameraGame.EGameCam.Behind:
+                                cameraGame.gameCam = "Behind";
+                                break;
+                            default:
+                                cameraGame.gameCam = "<Default>";
+                                break;
+                        }
+                    }
+                    if (cameraGame.gameCam2!=null){
+                        switch (cameraGame.gameCam2){
+                            case CGameCtnMediaBlockCameraGame.EGameCam2.Internal:
+                                cameraGame.gameCam = "Internal";
+                                break;
+                            case CGameCtnMediaBlockCameraGame.EGameCam2.External:
+                                cameraGame.gameCam = "Behind";
+                                break;
+                            default:
+                                cameraGame.gameCam = "<Default>";
+                                break;
+                        }
+                    }
+                } else if (block is CGameCtnMediaBlockImage image){
+                    image.Image = image.Image with { Version = 2 };
+                } else if (block is CGameCtnMediaBlockSound sound){
+                    var soundChunk003 = sound.GetChunk<CGameCtnMediaBlockSound.Chunk030A7003>();
+                    if (soundChunk003!=null){
+                        soundChunk003.Version=0;
+                        sound.Chunks.Add(soundChunk003);
+                    }
+                } else if (block is CGameCtnMediaBlockGhost mediaBlockGhost){
+                    //Ignore for now.
+                    continue;
+                }
+                newBlocks.Add(block);
+            }
+            track.Blocks = newBlocks;
+        }
+
+        return clip;
+    }
+
+    CGameCtnMediaClipGroup? downgradeClipGroup(CGameCtnMediaClipGroup? clipGroup){
+        if (clipGroup==null)return null;
+        for (int i=0; i<clipGroup.Clips.Count;++i){
+            clipGroup.Clips[i] = new CGameCtnMediaClipGroup.ClipTrigger(downgradeClip(clipGroup.Clips[i].Clip), clipGroup.Clips[i].Trigger);
+        }
+        return clipGroup;
+    }
+
+    CGameCtnBlock? downgradeBlock(CGameCtnBlock initialBlock){
+        if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
+
+        var yOffset = 8; //TM2 maps are 8 blocks higher than TMNF's
+        //Block-specific changes
+        if (initialBlock.Name=="StadiumWater2"){initialBlock.Name="StadiumWater";yOffset--;}                  //TM2 added a StadiumWater2 and StadiumPool2.
+        if (initialBlock.Name=="StadiumPool2"){initialBlock.Name="StadiumPool";yOffset--;}                    //The only thing they do is they have no offset, so i rename the block and cancel the offset.
+        if (initialBlock.Name == "StadiumCircuitToRoadMain")initialBlock.Name = "StadiumPlatformToRoadMain";  //TM2 made that block Circuit (Cube platform) instead of Platform, so we can just rename it.
+        
+        if (!TMNF.Blocks.Contains(initialBlock.Name))return null; //Ignore all non-TMNF blocks
+        
+        initialBlock.Bit17=false;                      //
+        initialBlock.Bit21=false;                      // Some TM2-only behaviors
+        initialBlock.WaypointSpecialProperty = null;   //
+        
+        switch (initialBlock.Name){ //Stupid block changes, because these don't have the same offset in TM2
+            case "StadiumPool":
+            case "StadiumWater":
+            case "StadiumDirtBorder":
+            case "StadiumDirt":
+                yOffset++;
+                break;
+            case "StadiumDirtHill":
+                yOffset--;
+                break;
+            default:
+                break;
+        }
+        initialBlock.Coord += (0,-yOffset,0); //Apply offset
+        if (initialBlock.Coord.Y <= 0 || initialBlock.Coord.Y >= 32){
+            if (!(initialBlock.Coord.Y == 0 && new String[]{"StadiumPool","StadiumWater","StadiumDirtBorder","StadiumDirt"}.Contains(initialBlock.Name)))return null; 
+        }
+        if (initialBlock.Skin!=null){  //Changing packdesc version (yes, this causes a crash if not done)
+            if (initialBlock.Skin.PackDesc!=null)initialBlock.Skin.PackDesc=initialBlock.Skin.PackDesc with {Version=2};
+            if (initialBlock.Skin.ParentPackDesc!=null)initialBlock.Skin.ParentPackDesc=initialBlock.Skin.ParentPackDesc with {Version=2};
+            initialBlock.Skin.Text = "";
+        }
+        return initialBlock;
+    }
+
+    IList<CGameCtnBlock> downgradeBlockList(IList<CGameCtnBlock> initialBlocks){
+        var newBlockList = new List<CGameCtnBlock>();
+        foreach (var block in initialBlocks){
+            CGameCtnBlock? newBlock = downgradeBlock(block);
+            if (newBlock!=null)newBlockList.Add(newBlock);
+        }        
+        return newBlockList;
     }
 }
+
