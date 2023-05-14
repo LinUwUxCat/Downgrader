@@ -143,7 +143,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
 
         map.MapName = "[D]" + map.MapName;
 
-        return new(map, map.MapName + "Challenge.Gbx", false);
+        return new(map, map.MapName + ".Challenge.Gbx", false);
     }
 
     CGameCtnMediaClip? downgradeClip(CGameCtnMediaClip? clip){
