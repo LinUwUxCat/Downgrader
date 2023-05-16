@@ -13,9 +13,9 @@ namespace Downgrader;
 public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IHasAssets{
 
     private CGameCtnChallenge map;
-
+    private String[] CanGoToZero = new String[]{"StadiumPool","StadiumWater","StadiumDirtBorder","StadiumDirt"}; //Ideally this shouldn't be hardcoded
     public BlockList? TMNF { get; private set; } // public will be useful on the web
-
+    public EditsList? Edits { get; private set; }
     public DowngraderTool(CGameCtnChallenge map){
         this.map = map;
     }
@@ -28,6 +28,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     public async ValueTask LoadAssetsAsync()
     {
         TMNF = await AssetsManager<DowngraderTool>.GetFromYmlAsync<BlockList>(Path.Combine("BlockList", "TMNF.yml"));
+        Edits = await AssetsManager<DowngraderTool>.GetFromYmlAsync<EditsList>(Path.Combine("Edits", "Edits.yml"));
     }
 
     public NodeFile<CGameCtnChallenge> Produce(){
@@ -226,35 +227,25 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
 
     CGameCtnBlock? downgradeBlock(CGameCtnBlock initialBlock){
         if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
+        if (Edits is null) throw new("Edits.yml has not been retrieved in time!");
+        Int3 Offset = new(0,-8,0); //TM2 maps are, by default, 8 blocks higher than TMNF's
 
-        var yOffset = 8; //TM2 maps are 8 blocks higher than TMNF's
-        //Block-specific changes
-        if (initialBlock.Name=="StadiumWater2"){initialBlock.Name="StadiumWater";yOffset--;}                  //TM2 added a StadiumWater2 and StadiumPool2.
-        if (initialBlock.Name=="StadiumPool2"){initialBlock.Name="StadiumPool";yOffset--;}                    //The only thing they do is they have no offset, so i rename the block and cancel the offset.
-        if (initialBlock.Name == "StadiumCircuitToRoadMain")initialBlock.Name = "StadiumPlatformToRoadMain";  //TM2 made that block Circuit (Cube platform) instead of Platform, so we can just rename it.
-        
-        if (!TMNF.Blocks.Contains(initialBlock.Name))return null; //Ignore all non-TMNF blocks
-        
+        //If there is specific edits to be made, we do them
+        if (Edits.Edits.ContainsKey(initialBlock.Name)){
+            Offset = Edits.Edits[initialBlock.Name].IntOffset;
+            string newName = Edits.Edits[initialBlock.Name].ReplaceWith;
+            if (newName!="")initialBlock.Name = newName;
+        } else { //If not, we check if the block is known
+            if (!TMNF.Blocks.Contains(initialBlock.Name))return null; //Ignore all non-TMNF blocks
+        }
+
         initialBlock.Bit17=false;                      //
         initialBlock.Bit21=false;                      // Some TM2-only behaviors
         initialBlock.WaypointSpecialProperty = null;   //
         
-        switch (initialBlock.Name){ //Stupid block changes, because these don't have the same offset in TM2
-            case "StadiumPool":
-            case "StadiumWater":
-            case "StadiumDirtBorder":
-            case "StadiumDirt":
-                yOffset++;
-                break;
-            case "StadiumDirtHill":
-                yOffset--;
-                break;
-            default:
-                break;
-        }
-        initialBlock.Coord += (0,-yOffset,0); //Apply offset
+        initialBlock.Coord += Offset; //Apply offset
         if (initialBlock.Coord.Y <= 0 || initialBlock.Coord.Y >= 32){
-            if (!(initialBlock.Coord.Y == 0 && new String[]{"StadiumPool","StadiumWater","StadiumDirtBorder","StadiumDirt"}.Contains(initialBlock.Name)))return null; 
+            if (!(initialBlock.Coord.Y == 0 && CanGoToZero.Contains(initialBlock.Name)))return null; 
         }
         if (initialBlock.Skin!=null){  //Changing packdesc version (yes, this causes a crash if not done)
             if (initialBlock.Skin.PackDesc!=null)initialBlock.Skin.PackDesc=initialBlock.Skin.PackDesc with {Version=2};
