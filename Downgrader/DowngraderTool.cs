@@ -62,6 +62,15 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         map.Chunks.Remove(0x03043056); 
         //Deco stuff
         map.Chunks.Remove(0x03043052);
+        if (map.Decoration!=null){
+            string mood = map.Decoration.Id;
+            if (mood.Contains("Night"))mood="Night";
+            if (mood.Contains("Sunset"))mood="Sunset";
+            if (mood.Contains("Day"))mood="Day";
+            if (mood.Contains("Sunrise"))mood="Sunrise";
+            map.Decoration = map.Decoration with { Id = mood };
+        }
+        
         //EmbeddedData
         map.Chunks.Remove(0x03043054); 
         //Genealogies
@@ -244,6 +253,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         initialBlock.WaypointSpecialProperty = null;   //
         
         initialBlock.Coord += Offset; //Apply offset
+        if (initialBlock.Coord.X<0||initialBlock.Coord.X>31||initialBlock.Coord.Z<0||initialBlock.Coord.Z>31)return null;
         if (initialBlock.Coord.Y <= 0 || initialBlock.Coord.Y >= 32){
             if (!(initialBlock.Coord.Y == 0 && CanGoToZero.Contains(initialBlock.Name)))return null; 
         }
