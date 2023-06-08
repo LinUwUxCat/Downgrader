@@ -1,18 +1,30 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="GbxToolAPI.CLI" Version="1.0.3" />
-  </ItemGroup>
+	<PropertyGroup>
+		<PublishSingleFile>true</PublishSingleFile>
+		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+		<SelfContained>true</SelfContained>
 
-  <ItemGroup>
-    <ProjectReference Include="../Downgrader/Downgrader.csproj" />
-  </ItemGroup>
+		<!-- full will come with code generation -->
+		<TrimMode>partial</TrimMode>
+		<PublishTrimmed>true</PublishTrimmed>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="GbxToolAPI.CLI" Version="1.0.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="../Downgrader/Downgrader.csproj">
+			<IsTrimmable>false</IsTrimmable>
+		</ProjectReference>
+	</ItemGroup>
 
 </Project>
