@@ -1,15 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<IsTrimmable>true</IsTrimmable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="GBX.NET" Version="1.2.0" />
-		<PackageReference Include="GBX.NET.LZO" Version="1.0.2" />
-		<PackageReference Include="GbxToolAPI" Version="1.0.3" />
+		<PackageReference Include="GbxToolAPI" Version="1.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>
