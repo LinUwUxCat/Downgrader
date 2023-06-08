@@ -1,0 +1,21 @@
+Edits:
+  # Howto:
+  # BlockName: # Name of the block that needs edits
+    # ReplaceWith: NewBlockName # New name of the block after the edit - If not included, old name is kept
+    # Offset: [0, 0, 0] # How much the block should move when downgrading - If not included, [0, -8, 0]
+  StadiumWater2:
+    ReplaceWith: StadiumWater
+  StadiumPool2:
+    ReplaceWith: StadiumPool
+  StadiumCircuitToRoadMain:
+    ReplaceWith: StadiumPlatformToRoadMain
+  StadiumPool:
+    Offset: [0, -9, 0]
+  StadiumWater:
+    Offset: [0, -9, 0]
+  StadiumDirtBorder:
+    Offset: [0, -9, 0]
+  StadiumDirt:
+    Offset: [0, -9, 0]
+  StadiumDirtHill:
+    Offset: [0, -7, 0]
