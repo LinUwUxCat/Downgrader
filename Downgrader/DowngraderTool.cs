@@ -1,6 +1,7 @@
 using GBX.NET;
 using GBX.NET.Engines.Game;
 using GbxToolAPI;
+using System.Runtime.CompilerServices;
 
 namespace Downgrader;
 
@@ -34,9 +35,9 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     public NodeFile<CGameCtnChallenge> Produce(){
 
         /* checks */
-        if (!GameVersion.IsManiaPlanet(map))throw new("Only Maniaplanet maps are supported!");
-        if (map.Collection != "Stadium")throw new("Only TM2 Stadium maps are supported!");
-        if (map.PlayerModel!=null&& !new String[]{"American", "SnowCar", "Rally", "SportCar", "CoastCar", "BayCar", "StadiumCar", ""}.Contains(map.PlayerModel.Id))throw new("The provided car isn't supported!");
+        if (!GameVersion.IsManiaPlanet(map)) throw new("Only Maniaplanet maps are supported!");
+        if (map.Collection != "Stadium") throw new("Only TM2 Stadium maps are supported!");
+        if (map.PlayerModel != null && !new String[]{"American", "SnowCar", "Rally", "SportCar", "CoastCar", "BayCar", "StadiumCar", ""}.Contains(map.PlayerModel.Id)) throw new("The provided car isn't supported!");
         if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
 
         /* Removing: */
@@ -44,10 +45,10 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         //Author stuff
         map.HeaderChunks.Remove(0x03043008); //Remove "author" header chunk
         map.Chunks.Remove(0x03043042); //Remove "author" body chunk
-        map.AuthorExtraInfo=null;
-        map.AuthorNickname=null;
-        map.AuthorVersion=null;
-        map.AuthorZone=null;
+        map.AuthorExtraInfo = null;
+        map.AuthorNickname = null;
+        map.AuthorVersion = null;
+        map.AuthorZone = null;
         //BakedBlocks stuff
         map.Chunks.Remove(0x03043048); 
         //Bot Path stuff
@@ -64,10 +65,10 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         map.Chunks.Remove(0x03043052);
         if (map.Decoration!=null){
             string mood = map.Decoration.Id;
-            if (mood.Contains("Night"))mood="Night";
-            if (mood.Contains("Sunset"))mood="Sunset";
-            if (mood.Contains("Day"))mood="Day";
-            if (mood.Contains("Sunrise"))mood="Sunrise";
+            if (mood.Contains("Night"))   mood = "Night";
+            if (mood.Contains("Sunset"))  mood = "Sunset";
+            if (mood.Contains("Day"))     mood = "Day";
+            if (mood.Contains("Sunrise")) mood = "Sunrise";
             map.Decoration = map.Decoration with { Id = mood };
         }
         
@@ -78,10 +79,10 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         //LightMap stuff
         map.Chunks.Remove(0x0304303D);
         //mapstyle
-        map.MapStyle=null;
-        map.MapType=null;
+        map.MapStyle = null;
+        map.MapType = null;
         //CP
-        map.NbCheckpoints=null;
+        map.NbCheckpoints = null;
         //ObjectiveText
         map.Chunks.Remove(0x0304304B); 
         //Offzone
@@ -100,7 +101,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         map.Chunks.Remove(0x03043058);
         map.Chunks.Remove(0x03043059);
         //ChallengeParameters
-        if (map.ChallengeParameters!=null){
+        if (map.ChallengeParameters != null){
             map.ChallengeParameters.Chunks.Remove<CGameCtnChallengeParameters.Chunk0305B00A>();
             map.ChallengeParameters.Chunks.Remove<CGameCtnChallengeParameters.Chunk0305B00D>();
             map.ChallengeParameters.Chunks.Remove<CGameCtnChallengeParameters.Chunk0305B00E>();
@@ -115,25 +116,28 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         //Play mode
         map.Chunks.Create(0x0304301C); //Add "play mode"
         //Collection
-        map.Collection="Stadium";
+        map.Collection = "Stadium";
         
         //Header chunks versions
         var x2 = map.HeaderChunks.Get<CGameCtnChallenge.Chunk03043002>();
-        if(x2!=null){
+        if(x2 != null){
             x2.Version = 11;
             map.HeaderChunks.Add(x2);
         }
+
         var x3 = map.HeaderChunks.Get<CGameCtnChallenge.Chunk03043003>();
-        if(x3!=null){
+        if(x3 != null){
             x3.Version = 5;
             map.HeaderChunks.Add(x3);
         }
+
         //PackDesc
-        if (map.CustomMusicPackDesc!=null){
-            map.CustomMusicPackDesc = map.CustomMusicPackDesc with {Version=2};
+        if (map.CustomMusicPackDesc != null){
+            map.CustomMusicPackDesc = map.CustomMusicPackDesc with {Version = 2};
         } 
-        if (map.ModPackDesc!=null){
-            map.ModPackDesc = map.ModPackDesc with {Version=2};
+
+        if (map.ModPackDesc != null){
+            map.ModPackDesc = map.ModPackDesc with {Version = 2};
         }
 
         //Swap out block chunk
@@ -147,9 +151,9 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         else map.Blocks = downgradeBlockList(map.Blocks);
 
         //Mediatracker
-        map.ClipIntro=downgradeClip(map.ClipIntro);
-        map.ClipGroupInGame=downgradeClipGroup(map.ClipGroupInGame);
-        map.ClipGroupEndRace=downgradeClipGroup(map.ClipGroupEndRace);
+        map.ClipIntro = downgradeClip(map.ClipIntro);
+        map.ClipGroupInGame = downgradeClipGroup(map.ClipGroupInGame);
+        map.ClipGroupEndRace = downgradeClipGroup(map.ClipGroupEndRace);
 
         map.MapName = "[D]" + map.MapName;
 
@@ -157,7 +161,8 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     }
 
     CGameCtnMediaClip? downgradeClip(CGameCtnMediaClip? clip){
-        if (clip==null)return null;
+        if (clip == null) return null;
+
         clip.Chunks.Remove<CGameCtnMediaClip.Chunk0307900D>();
         clip.Chunks.Create(0x03079004);
         clip.Chunks.Create(0x03079005);
@@ -166,11 +171,33 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         foreach (var track in clip.Tracks){
             track.Chunks.Remove<CGameCtnMediaTrack.Chunk03078005>();
             track.Chunks.Create<CGameCtnMediaTrack.Chunk03078004>();
-            //Do things
+            
             var newBlocks = new List<CGameCtnMediaBlock>();
             foreach (var block in track.Blocks){
+
+                //MediaBlockDOF -> MediaBlockFxBlurDepth
+                if (block is CGameCtnMediaBlockDOF dof){
+                    CGameCtnMediaBlockFxBlurDepth fxBlurDepth = (CGameCtnMediaBlockFxBlurDepth)RuntimeHelpers.GetUninitializedObject(typeof(CGameCtnMediaBlockFxBlurDepth));
+                    fxBlurDepth.Chunks.Create<CGameCtnMediaBlockFxBlurDepth.Chunk03081001>();
+                    var newKeys = new List<CGameCtnMediaBlockFxBlurDepth.Key>();
+                    foreach(var key in dof.Keys){
+                        CGameCtnMediaBlockFxBlurDepth.Key newKey = new();
+                        newKey.Time = key.Time;
+                        newKey.ForceFocus = true;
+                        newKey.FocusZ = key.ZFocus;
+                        newKey.LensSize = key.LensSize;
+                        newKeys.Add(newKey);
+                    }
+                    fxBlurDepth.Keys = newKeys.ToArray();
+                    newBlocks.Add(fxBlurDepth);
+                    continue;
+                }
+
+                //Ignore all new blocks
+                //Note : BloomHdr is not FxBloom - dunno if it could be converted like DOF -> FxBlurDepth
                 if (!MediaBlocks.TMNF.Contains(block.GetType()))continue;
-                //Note : BloomHdr is not FxBloom, Depth Of Field is not FxBlurdepth
+
+                //Downgrade compatible blocks
                 if (block is CGameCtnMediaBlockCameraPath cameraPath){
                     cameraPath.Chunks.Remove<CGameCtnMediaBlockCameraPath.Chunk030A1003>();
                     cameraPath.Chunks.Create<CGameCtnMediaBlockCameraPath.Chunk030A1002>();
@@ -180,7 +207,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
                 } else if (block is CGameCtnMediaBlockCameraGame cameraGame){
                     cameraGame.Chunks.Remove<CGameCtnMediaBlockCameraGame.Chunk03084007>();
                     cameraGame.Chunks.Create<CGameCtnMediaBlockCameraGame.Chunk03084003>();
-                    if (cameraGame.gameCam1!=null){
+                    if (cameraGame.gameCam1 != null){
                         switch (cameraGame.gameCam1){
                             case CGameCtnMediaBlockCameraGame.EGameCam.Internal:
                                 cameraGame.gameCam = "Internal";
@@ -193,7 +220,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
                                 break;
                         }
                     }
-                    if (cameraGame.gameCam2!=null){
+                    if (cameraGame.gameCam2 != null){
                         switch (cameraGame.gameCam2){
                             case CGameCtnMediaBlockCameraGame.EGameCam2.Internal:
                                 cameraGame.gameCam = "Internal";
@@ -210,8 +237,8 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
                     image.Image = image.Image with { Version = 2 };
                 } else if (block is CGameCtnMediaBlockSound sound){
                     var soundChunk003 = sound.GetChunk<CGameCtnMediaBlockSound.Chunk030A7003>();
-                    if (soundChunk003!=null){
-                        soundChunk003.Version=0;
+                    if (soundChunk003 != null){
+                        soundChunk003.Version = 0;
                         sound.Chunks.Add(soundChunk003);
                     }
                 } else if (block is CGameCtnMediaBlockGhost mediaBlockGhost){
@@ -222,14 +249,21 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
             }
             track.Blocks = newBlocks;
         }
-
         return clip;
     }
 
+    CGameCtnMediaClipGroup.Trigger downgradeTrigger(CGameCtnMediaClipGroup.Trigger trigger){
+        for (int i = 0; i < trigger.Coords.Length; i++){
+            trigger.Coords[i] = trigger.Coords[i] with { Y = trigger.Coords[i].Y - 8 };
+        }
+        return trigger;
+        //TODO : Figure out how to deal with this shit
+    }
+
     CGameCtnMediaClipGroup? downgradeClipGroup(CGameCtnMediaClipGroup? clipGroup){
-        if (clipGroup==null)return null;
-        for (int i=0; i<clipGroup.Clips.Count;++i){
-            clipGroup.Clips[i] = new CGameCtnMediaClipGroup.ClipTrigger(downgradeClip(clipGroup.Clips[i].Clip), clipGroup.Clips[i].Trigger);
+        if (clipGroup == null)return null;
+        for (int i = 0; i < clipGroup.Clips.Count; ++i){
+            clipGroup.Clips[i] = new CGameCtnMediaClipGroup.ClipTrigger(downgradeClip(clipGroup.Clips[i].Clip), downgradeTrigger(clipGroup.Clips[i].Trigger));
         }
         return clipGroup;
     }
@@ -237,29 +271,29 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     CGameCtnBlock? downgradeBlock(CGameCtnBlock initialBlock){
         if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
         if (Edits is null) throw new("Edits.yml has not been retrieved in time!");
-        Int3 Offset = new(0,-8,0); //TM2 maps are, by default, 8 blocks higher than TMNF's
+        Int3 Offset = new(0, -8, 0); //TM2 maps are, by default, 8 blocks higher than TMNF's
 
         //If there is specific edits to be made, we do them
         if (Edits.Edits.ContainsKey(initialBlock.Name)){
             Offset = Edits.Edits[initialBlock.Name].IntOffset;
             string newName = Edits.Edits[initialBlock.Name].ReplaceWith;
-            if (newName!="")initialBlock.Name = newName;
+            if (newName != "")initialBlock.Name = newName;
         } else { //If not, we check if the block is known
             if (!TMNF.Blocks.Contains(initialBlock.Name))return null; //Ignore all non-TMNF blocks
         }
 
-        initialBlock.Bit17=false;                      //
-        initialBlock.Bit21=false;                      // Some TM2-only behaviors
-        initialBlock.WaypointSpecialProperty = null;   //
+        initialBlock.Bit17 = false;                     //
+        initialBlock.Bit21 = false;                     // Some TM2-only behaviors
+        initialBlock.WaypointSpecialProperty = null;    //
         
         initialBlock.Coord += Offset; //Apply offset
-        if (initialBlock.Coord.X<0||initialBlock.Coord.X>31||initialBlock.Coord.Z<0||initialBlock.Coord.Z>31)return null;
+        if (initialBlock.Coord.X < 0 || initialBlock.Coord.X > 31 || initialBlock.Coord.Z < 0 || initialBlock.Coord.Z > 31)return null;
         if (initialBlock.Coord.Y <= 0 || initialBlock.Coord.Y >= 32){
             if (!(initialBlock.Coord.Y == 0 && CanGoToZero.Contains(initialBlock.Name)))return null; 
         }
-        if (initialBlock.Skin!=null){  //Changing packdesc version (yes, this causes a crash if not done)
-            if (initialBlock.Skin.PackDesc!=null)initialBlock.Skin.PackDesc=initialBlock.Skin.PackDesc with {Version=2};
-            if (initialBlock.Skin.ParentPackDesc!=null)initialBlock.Skin.ParentPackDesc=initialBlock.Skin.ParentPackDesc with {Version=2};
+        if (initialBlock.Skin != null){  //Changing packdesc version (yes, this causes a crash if not done)
+            if (initialBlock.Skin.PackDesc != null)initialBlock.Skin.PackDesc = initialBlock.Skin.PackDesc with {Version = 2};
+            if (initialBlock.Skin.ParentPackDesc != null)initialBlock.Skin.ParentPackDesc = initialBlock.Skin.ParentPackDesc with {Version = 2};
             initialBlock.Skin.Text = "";
         }
         return initialBlock;
@@ -269,7 +303,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         var newBlockList = new List<CGameCtnBlock>();
         foreach (var block in initialBlocks){
             CGameCtnBlock? newBlock = downgradeBlock(block);
-            if (newBlock!=null)newBlockList.Add(newBlock);
+            if (newBlock != null)newBlockList.Add(newBlock);
         }        
         return newBlockList;
     }
