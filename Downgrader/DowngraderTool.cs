@@ -253,11 +253,16 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     }
 
     CGameCtnMediaClipGroup.Trigger downgradeTrigger(CGameCtnMediaClipGroup.Trigger trigger){
+        List<Int3> newCoords = new();
+
         for (int i = 0; i < trigger.Coords.Length; i++){
-            trigger.Coords[i] = trigger.Coords[i] with { Y = trigger.Coords[i].Y - 8 };
+            Int3 newCoord = new(trigger.Coords[i].X/3, trigger.Coords[i].Y-8, trigger.Coords[i].Z/3);
+            if (newCoord.Y<0)continue;
+            newCoords.Add(newCoord);
         }
+        
+        trigger.Coords = newCoords.ToArray();
         return trigger;
-        //TODO : Figure out how to deal with this shit
     }
 
     CGameCtnMediaClipGroup? downgradeClipGroup(CGameCtnMediaClipGroup? clipGroup){
