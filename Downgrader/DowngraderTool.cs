@@ -17,6 +17,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     private String[] CanGoToZero = new String[]{"StadiumPool","StadiumWater","StadiumDirtBorder","StadiumDirt"}; //Ideally this shouldn't be hardcoded
     public BlockList? TMNF { get; private set; } // public will be useful on the web
     public EditsList? Edits { get; private set; }
+    public DowngraderConfig Config { get; set; } = new();
     public DowngraderTool(CGameCtnChallenge map){
         this.map = map;
     }
@@ -161,7 +162,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     }
 
     CGameCtnMediaClip? downgradeClip(CGameCtnMediaClip? clip){
-        if (clip == null) return null;
+        if (clip == null || Config.RemoveMediatracker) return null;
 
         clip.Chunks.Remove<CGameCtnMediaClip.Chunk0307900D>();
         clip.Chunks.Create(0x03079004);
@@ -266,7 +267,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     }
 
     CGameCtnMediaClipGroup? downgradeClipGroup(CGameCtnMediaClipGroup? clipGroup){
-        if (clipGroup == null)return null;
+        if (clipGroup == null || Config.RemoveMediatracker)return null;
         for (int i = 0; i < clipGroup.Clips.Count; ++i){
             clipGroup.Clips[i] = new CGameCtnMediaClipGroup.ClipTrigger(downgradeClip(clipGroup.Clips[i].Clip), downgradeTrigger(clipGroup.Clips[i].Trigger));
         }
