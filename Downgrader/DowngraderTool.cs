@@ -14,7 +14,6 @@ namespace Downgrader;
 public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IHasAssets{
 
     private CGameCtnChallenge map;
-    private String[] CanGoToZero = new String[]{"StadiumPool","StadiumWater","StadiumDirtBorder","StadiumDirt"}; //Ideally this shouldn't be hardcoded
     public BlockList? TMNF { get; private set; } // public will be useful on the web
     public EditsList? Edits { get; private set; }
     public DowngraderConfig Config { get; set; } = new();
@@ -278,10 +277,11 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
         if (Edits is null) throw new("Edits.yml has not been retrieved in time!");
         Int3 Offset = new(0, -8, 0); //TM2 maps are, by default, 8 blocks higher than TMNF's
-
+        int minimumHeight = 1;
         //If there is specific edits to be made, we do them
         if (Edits.Edits.ContainsKey(initialBlock.Name)){
             Offset = Edits.Edits[initialBlock.Name].IntOffset;
+            minimumHeight = Edits.Edits[initialBlock.Name].MinimumHeight;
             string newName = Edits.Edits[initialBlock.Name].ReplaceWith;
             if (newName != "")initialBlock.Name = newName;
         } else { //If not, we check if the block is known
@@ -294,9 +294,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         
         initialBlock.Coord += Offset; //Apply offset
         if (initialBlock.Coord.X < 0 || initialBlock.Coord.X > 31 || initialBlock.Coord.Z < 0 || initialBlock.Coord.Z > 31)return null;
-        if (initialBlock.Coord.Y <= 0 || initialBlock.Coord.Y >= 32){
-            if (!(initialBlock.Coord.Y == 0 && CanGoToZero.Contains(initialBlock.Name)))return null; 
-        }
+        if (initialBlock.Coord.Y < minimumHeight || initialBlock.Coord.Y >= 32) return null;
         if (initialBlock.Skin != null){  //Changing packdesc version (yes, this causes a crash if not done)
             if (initialBlock.Skin.PackDesc != null)initialBlock.Skin.PackDesc = initialBlock.Skin.PackDesc with {Version = 2};
             if (initialBlock.Skin.ParentPackDesc != null)initialBlock.Skin.ParentPackDesc = initialBlock.Skin.ParentPackDesc with {Version = 2};

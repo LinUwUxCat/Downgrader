@@ -3,5 +3,6 @@ using GbxToolAPI;
 namespace Downgrader;
 
 public class DowngraderConfig : Config {
-    public bool RemoveMediatracker { get; set; } = true;
+    //RemoveMediatracker : Removes mediatracker from the downgraded map completely. Default is false.
+    public bool RemoveMediatracker { get; set; } = false;
 }

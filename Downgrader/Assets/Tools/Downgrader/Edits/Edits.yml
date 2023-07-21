@@ -3,6 +3,7 @@ Edits:
   # BlockName: # Name of the block that needs edits
     # ReplaceWith: NewBlockName # New name of the block after the edit - If not included, old name is kept
     # Offset: [0, 0, 0] # How much the block should move when downgrading - If not included, [0, -8, 0]
+    # MinimumHeight: 0 # Minimum height of the block. If below, it gets deleted. Most blocks crash TMF unless they are terrain blocks like Water and Dirt - If not included, 1
   StadiumWater2:
     ReplaceWith: StadiumWater
   StadiumPool2:
@@ -11,11 +12,15 @@ Edits:
     ReplaceWith: StadiumPlatformToRoadMain
   StadiumPool:
     Offset: [0, -9, 0]
+    MinimumHeight: 0
   StadiumWater:
     Offset: [0, -9, 0]
+    MinimumHeight: 0
   StadiumDirtBorder:
     Offset: [0, -9, 0]
+    MinimumHeight: 0
   StadiumDirt:
     Offset: [0, -9, 0]
+    MinimumHeight: 0
   StadiumDirtHill:
     Offset: [0, -7, 0]
