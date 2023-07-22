@@ -11,7 +11,7 @@ namespace Downgrader;
 [ToolGitHub("LinUwUxCat/Downgrader")]
 [ToolAssets("Downgrader")]
 [ToolAssetsIgnoreIngame("BlockList")]
-public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IHasAssets{
+public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IHasAssets, IConfigurable<DowngraderConfig>{
 
     private CGameCtnChallenge map;
     public BlockList? TMNF { get; private set; } // public will be useful on the web
