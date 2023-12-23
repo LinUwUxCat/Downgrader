@@ -11,6 +11,7 @@ namespace Downgrader;
 [ToolGitHub("LinUwUxCat/Downgrader")]
 [ToolAssets("Downgrader")]
 [ToolAssetsIgnoreIngame("BlockList")]
+[ToolAssetsIgnoreIngame("Edits")]
 public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IHasAssets, IConfigurable<DowngraderConfig>{
 
     private CGameCtnChallenge map;
