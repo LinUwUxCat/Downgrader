@@ -2,12 +2,11 @@ using GBX.NET;
 using GBX.NET.Engines.Game;
 using GbxToolAPI;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 namespace Downgrader;
 
 [ToolName("Downgrader")]
-[ToolDescription("Downgrade a TM2 Stadium Map to TMNF")]
+[ToolDescription("Downgrade a TM2 Stadium map to TMNF")]
 [ToolAuthors("LinuxCat")]
 [ToolGitHub("LinUwUxCat/Downgrader")]
 [ToolAssets("Downgrader")]
