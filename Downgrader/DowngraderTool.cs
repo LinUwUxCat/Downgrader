@@ -16,6 +16,9 @@ namespace Downgrader;
 public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IHasAssets, IConfigurable<DowngraderConfig> {
 
     private readonly CGameCtnChallenge map;
+
+    private readonly string[] supportedCars = new string[] { "American", "SnowCar", "Rally", "SportCar", "CoastCar", "BayCar", "StadiumCar", "" };
+
     public BlockList? TMNF { get; private set; } // public will be useful on the web
     public EditsList? Edits { get; private set; }
     public DowngraderConfig Config { get; set; } = new();
@@ -38,32 +41,32 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         /* checks */
         if (!GameVersion.IsManiaPlanet(map)) throw new("Only Maniaplanet maps are supported!");
         if (map.Collection != "Stadium") throw new("Only TM2 Stadium maps are supported!");
-        if (map.PlayerModel != null && !new String[] { "American", "SnowCar", "Rally", "SportCar", "CoastCar", "BayCar", "StadiumCar", "" }.Contains(map.PlayerModel.Id)) throw new("The provided car isn't supported!");
+        if (map.PlayerModel != null && !supportedCars.Contains(map.PlayerModel.Id)) throw new("The provided car isn't supported!");
         if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
 
         /* Removing: */
 
         //Author stuff
-        map.HeaderChunks.Remove(0x03043008); //Remove "author" header chunk
-        map.Chunks.Remove(0x03043042); //Remove "author" body chunk
+        map.HeaderChunks.Remove<CGameCtnChallenge.Chunk03043008>(); //Remove "author" header chunk
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043042>(); //Remove "author" body chunk
         map.AuthorExtraInfo = null;
         map.AuthorNickname = null;
         map.AuthorVersion = null;
         map.AuthorZone = null;
         //BakedBlocks stuff
-        map.Chunks.Remove(0x03043048);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043048>();
         //Bot Path stuff
-        map.Chunks.Remove(0x03043053);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043053>();
         //Title info stuff
-        map.Chunks.Remove(0x03043051);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043051>();
         //CarMarksBuffer
-        map.Chunks.Remove(0x0304303E);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk0304303E>();
         //Clip stuff
-        map.Chunks.Remove(0x03043049);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043049>();
         //Time stuff
-        map.Chunks.Remove(0x03043056);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043056>();
         //Deco stuff
-        map.Chunks.Remove(0x03043052);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043052>();
         if (map.Decoration != null) {
             string mood = map.Decoration.Id;
             if (mood.Contains("Night")) mood = "Night";
@@ -74,33 +77,33 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         }
 
         //EmbeddedData
-        map.Chunks.Remove(0x03043054);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043054>();
         //Genealogies
-        map.Chunks.Remove(0x03043043);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043043>();
         //LightMap stuff
-        map.Chunks.Remove(0x0304303D);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk0304303D>();
         //mapstyle
         map.MapStyle = null;
         map.MapType = null;
         //CP
         map.NbCheckpoints = null;
         //ObjectiveText
-        map.Chunks.Remove(0x0304304B);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk0304304B>();
         //Offzone
-        map.Chunks.Remove(0x03043050);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043050>();
         //Metadata
-        map.Chunks.Remove(0x03043044);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043044>();
         //AnchoredObjects
-        map.Chunks.Remove(0x03043040);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043040>();
         //Random useless chunks
-        map.Chunks.Remove(0x03043034);
-        map.Chunks.Remove(0x03043036);
-        map.Chunks.Remove(0x03043038);
-        map.Chunks.Remove(0x0304304F);
-        map.Chunks.Remove(0x03043055);
-        map.Chunks.Remove(0x03043057);
-        map.Chunks.Remove(0x03043058);
-        map.Chunks.Remove(0x03043059);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043034>();
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043036>();
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043038>();
+        map.Chunks.Remove<CGameCtnChallenge.Chunk0304304F>();
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043055>();
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043057>();
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043058>();
+        map.Chunks.Remove<CGameCtnChallenge.Chunk03043059>();
         //ChallengeParameters
         if (map.ChallengeParameters != null) {
             map.ChallengeParameters.Chunks.Remove<CGameCtnChallengeParameters.Chunk0305B00A>();
@@ -111,11 +114,11 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         /* adding : */
 
         //Checkpoints
-        map.Chunks.Create(0x03043017); //add "checkpoints"
+        map.Chunks.Create<CGameCtnChallenge.Chunk03043017>(); //add "checkpoints"
         //Mediatracker
-        map.Chunks.Create(0x03043021); //Add "legacy mediatracker"
+        map.Chunks.Create<CGameCtnChallenge.Chunk03043021>(); //Add "legacy mediatracker"
         //Play mode
-        map.Chunks.Create(0x0304301C); //Add "play mode"
+        map.Chunks.Create<CGameCtnChallenge.Chunk0304301C>(); //Add "play mode"
         //Collection
         map.Collection = "Stadium";
 
@@ -142,8 +145,8 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         }
 
         //Swap out block chunk
-        map.Chunks.Remove(0x0304301F);
-        map.Chunks.Create(0x03043013);
+        map.Chunks.Remove<CGameCtnChallenge.Chunk0304301F>();
+        map.Chunks.Create<CGameCtnChallenge.Chunk03043013>();
         //Map size
         map.Size = new Int3(32, 32, 32);
 
@@ -166,9 +169,9 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         if (clip == null || Config.RemoveMediatracker) return null;
 
         clip.Chunks.Remove<CGameCtnMediaClip.Chunk0307900D>();
-        clip.Chunks.Create(0x03079004);
-        clip.Chunks.Create(0x03079005);
-        clip.Chunks.Create(0x03079007);
+        clip.Chunks.Create<CGameCtnMediaClip.Chunk03079004>();
+        clip.Chunks.Create<CGameCtnMediaClip.Chunk03079005>();
+        clip.Chunks.Create<CGameCtnMediaClip.Chunk03079007>();
 
         foreach (var track in clip.Tracks) {
             track.Chunks.Remove<CGameCtnMediaTrack.Chunk03078005>();
