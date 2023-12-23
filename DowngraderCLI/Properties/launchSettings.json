@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DowngraderCLI": {
+      "commandName": "Project",
+      "commandLineArgs": ""
+    }
+  }
+}

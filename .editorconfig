@@ -1,0 +1,12 @@
+[*.cs]
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_members_in_object_initializers = false
+
+csharp_style_prefer_range_operator = false
+csharp_style_namespace_declarations = file_scoped
+
+dotnet_style_require_accessibility_modifiers = always
+dotnet_diagnostic.IDE0003.severity = none
+dotnet_diagnostic.IDE0040.severity = warning
+dotnet_diagnostic.IDE0305.severity = none

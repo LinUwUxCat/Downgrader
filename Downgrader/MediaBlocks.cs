@@ -1,7 +1,9 @@
 using GBX.NET.Engines.Game;
+
 namespace Downgrader;
-class MediaBlocks{
-    public static HashSet<Type> TMNF = new HashSet<Type>{
+
+internal class MediaBlocks {
+    public static HashSet<Type> TMNF = new() {
         typeof(CGameCtnMediaBlockTriangles2D),
         typeof(CGameCtnMediaBlockCameraEffectShake),
         typeof(CGameCtnMediaBlockTransitionFade),
@@ -20,7 +22,7 @@ class MediaBlocks{
         typeof(CGameCtnMediaBlockSound),
         typeof(CGameCtnMediaBlockGhost)
     };
-     public static HashSet<Type> TMNESWC = new HashSet<Type>{
+    public static HashSet<Type> TMNESWC = new() {
         typeof(CGameCtnMediaBlockCameraEffectShake),
         typeof(CGameCtnMediaBlockTransitionFade),
         typeof(CGameCtnMediaBlockCameraPath), //Camera -> camera path
