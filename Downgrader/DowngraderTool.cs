@@ -41,7 +41,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         /* checks */
         if (!GameVersion.IsManiaPlanet(map)) throw new("Only Maniaplanet maps are supported!");
         if (map.Collection != "Stadium") throw new("Only TM2 Stadium maps are supported!");
-        if (map.PlayerModel != null && !supportedCars.Contains(map.PlayerModel.Id)) throw new("The provided car isn't supported!");
+        if (map.PlayerModel is not null && !supportedCars.Contains(map.PlayerModel.Id)) throw new("The provided car isn't supported!");
         if (TMNF is null) throw new("TMNF.yml has not been retrieved in time!");
 
         /* Removing: */
@@ -67,7 +67,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         map.Chunks.Remove<CGameCtnChallenge.Chunk03043056>();
         //Deco stuff
         map.Chunks.Remove<CGameCtnChallenge.Chunk03043052>();
-        if (map.Decoration != null) {
+        if (map.Decoration is not null) {
             string mood = map.Decoration.Id;
             if (mood.Contains("Night")) mood = "Night";
             if (mood.Contains("Sunset")) mood = "Sunset";
@@ -105,7 +105,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         map.Chunks.Remove<CGameCtnChallenge.Chunk03043058>();
         map.Chunks.Remove<CGameCtnChallenge.Chunk03043059>();
         //ChallengeParameters
-        if (map.ChallengeParameters != null) {
+        if (map.ChallengeParameters is not null) {
             map.ChallengeParameters.Chunks.Remove<CGameCtnChallengeParameters.Chunk0305B00A>();
             map.ChallengeParameters.Chunks.Remove<CGameCtnChallengeParameters.Chunk0305B00D>();
             map.ChallengeParameters.Chunks.Remove<CGameCtnChallengeParameters.Chunk0305B00E>();
@@ -124,23 +124,23 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
 
         //Header chunks versions
         var x2 = map.HeaderChunks.Get<CGameCtnChallenge.Chunk03043002>();
-        if (x2 != null) {
+        if (x2 is not null) {
             x2.Version = 11;
             map.HeaderChunks.Add(x2);
         }
 
         var x3 = map.HeaderChunks.Get<CGameCtnChallenge.Chunk03043003>();
-        if (x3 != null) {
+        if (x3 is not null) {
             x3.Version = 5;
             map.HeaderChunks.Add(x3);
         }
 
         //PackDesc
-        if (map.CustomMusicPackDesc != null) {
+        if (map.CustomMusicPackDesc is not null) {
             map.CustomMusicPackDesc = map.CustomMusicPackDesc with { Version = 2 };
         }
 
-        if (map.ModPackDesc != null) {
+        if (map.ModPackDesc is not null) {
             map.ModPackDesc = map.ModPackDesc with { Version = 2 };
         }
 
@@ -166,7 +166,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
 
     [return: NotNullIfNotNull(nameof(clip))]
     private CGameCtnMediaClip? DowngradeClip(CGameCtnMediaClip? clip) {
-        if (clip == null || Config.RemoveMediatracker) return null;
+        if (clip is null || Config.RemoveMediatracker) return null;
 
         clip.Chunks.Remove<CGameCtnMediaClip.Chunk0307900D>();
         clip.Chunks.Create<CGameCtnMediaClip.Chunk03079004>();
@@ -178,11 +178,11 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
             track.Chunks.Create<CGameCtnMediaTrack.Chunk03078004>();
 
             var newBlocks = new List<CGameCtnMediaBlock>();
-            foreach (var block in track.Blocks) {
 
+            foreach (var block in track.Blocks) {
                 //MediaBlockDOF -> MediaBlockFxBlurDepth
                 if (block is CGameCtnMediaBlockDOF dof) {
-                    CGameCtnMediaBlockFxBlurDepth fxBlurDepth = (CGameCtnMediaBlockFxBlurDepth)RuntimeHelpers.GetUninitializedObject(typeof(CGameCtnMediaBlockFxBlurDepth));
+                    CGameCtnMediaBlockFxBlurDepth fxBlurDepth = (CGameCtnMediaBlockFxBlurDepth)(NodeManager.GetNewNode(0x03081000) ?? throw new Exception("ID of this class is not correct"));
                     fxBlurDepth.Chunks.Create<CGameCtnMediaBlockFxBlurDepth.Chunk03081001>();
                     var newKeys = new List<CGameCtnMediaBlockFxBlurDepth.Key>();
                     foreach (var key in dof.Keys) {
@@ -204,41 +204,53 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
                 if (!MediaBlocks.TMNF.Contains(block.GetType())) continue;
 
                 //Downgrade compatible blocks
-                if (block is CGameCtnMediaBlockCameraPath cameraPath) {
-                    cameraPath.Chunks.Remove<CGameCtnMediaBlockCameraPath.Chunk030A1003>();
-                    cameraPath.Chunks.Create<CGameCtnMediaBlockCameraPath.Chunk030A1002>();
-                } else if (block is CGameCtnMediaBlockCameraCustom cameraCustom) {
-                    cameraCustom.Chunks.Remove<CGameCtnMediaBlockCameraCustom.Chunk030A2006>();
-                    cameraCustom.Chunks.Create<CGameCtnMediaBlockCameraCustom.Chunk030A2005>();
-                } else if (block is CGameCtnMediaBlockCameraGame cameraGame) {
-                    cameraGame.Chunks.Remove<CGameCtnMediaBlockCameraGame.Chunk03084007>();
-                    cameraGame.Chunks.Create<CGameCtnMediaBlockCameraGame.Chunk03084003>();
-                    if (cameraGame.gameCam1 != null) {
-                        cameraGame.gameCam = cameraGame.gameCam1 switch {
-                            CGameCtnMediaBlockCameraGame.EGameCam.Internal => "Internal",
-                            CGameCtnMediaBlockCameraGame.EGameCam.Behind => "Behind",
-                            _ => "<Default>",
-                        };
-                    }
-                    if (cameraGame.gameCam2 != null) {
-                        cameraGame.gameCam = cameraGame.gameCam2 switch {
-                            CGameCtnMediaBlockCameraGame.EGameCam2.Internal => "Internal",
-                            CGameCtnMediaBlockCameraGame.EGameCam2.External => "Behind",
-                            _ => "<Default>",
-                        };
-                    }
-                } else if (block is CGameCtnMediaBlockImage image) {
-                    image.Image = image.Image with { Version = 2 };
-                } else if (block is CGameCtnMediaBlockSound sound) {
-                    var soundChunk003 = sound.GetChunk<CGameCtnMediaBlockSound.Chunk030A7003>();
-                    if (soundChunk003 != null) {
-                        soundChunk003.Version = 0;
-                        sound.Chunks.Add(soundChunk003);
-                    }
-                } else if (block is CGameCtnMediaBlockGhost) {
-                    //Ignore for now.
-                    continue;
+                switch (block) {
+                    case CGameCtnMediaBlockCameraPath cameraPath:
+                        cameraPath.Chunks.Remove<CGameCtnMediaBlockCameraPath.Chunk030A1003>();
+                        cameraPath.Chunks.Create<CGameCtnMediaBlockCameraPath.Chunk030A1002>();
+                        break;
+
+                    case CGameCtnMediaBlockCameraCustom cameraCustom:
+                        cameraCustom.Chunks.Remove<CGameCtnMediaBlockCameraCustom.Chunk030A2006>();
+                        cameraCustom.Chunks.Create<CGameCtnMediaBlockCameraCustom.Chunk030A2005>();
+                        break;
+
+                    case CGameCtnMediaBlockCameraGame cameraGame:
+                        cameraGame.Chunks.Remove<CGameCtnMediaBlockCameraGame.Chunk03084007>();
+                        cameraGame.Chunks.Create<CGameCtnMediaBlockCameraGame.Chunk03084003>();
+                        if (cameraGame.gameCam1 is not null) {
+                            cameraGame.gameCam = cameraGame.gameCam1 switch {
+                                CGameCtnMediaBlockCameraGame.EGameCam.Internal => "Internal",
+                                CGameCtnMediaBlockCameraGame.EGameCam.Behind => "Behind",
+                                _ => "<Default>",
+                            };
+                        }
+                        if (cameraGame.gameCam2 is not null) {
+                            cameraGame.gameCam = cameraGame.gameCam2 switch {
+                                CGameCtnMediaBlockCameraGame.EGameCam2.Internal => "Internal",
+                                CGameCtnMediaBlockCameraGame.EGameCam2.External => "Behind",
+                                _ => "<Default>",
+                            };
+                        }
+                        break;
+
+                    case CGameCtnMediaBlockImage image:
+                        image.Image = image.Image with { Version = 2 };
+                        break;
+
+                    case CGameCtnMediaBlockSound sound:
+                        var soundChunk003 = sound.GetChunk<CGameCtnMediaBlockSound.Chunk030A7003>();
+                        if (soundChunk003 is not null) {
+                            soundChunk003.Version = 0;
+                            sound.Chunks.Add(soundChunk003);
+                        }
+                        break;
+
+                    case CGameCtnMediaBlockGhost:
+                        //Ignore for now.
+                        continue;
                 }
+
                 newBlocks.Add(block);
             }
             track.Blocks = newBlocks;
@@ -260,7 +272,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
     }
 
     private CGameCtnMediaClipGroup? DowngradeClipGroup(CGameCtnMediaClipGroup? clipGroup) {
-        if (clipGroup == null || Config.RemoveMediatracker) return null;
+        if (clipGroup is null || Config.RemoveMediatracker) return null;
         for (int i = 0; i < clipGroup.Clips.Count; ++i) {
             clipGroup.Clips[i] = new CGameCtnMediaClipGroup.ClipTrigger(DowngradeClip(clipGroup.Clips[i].Clip), DowngradeTrigger(clipGroup.Clips[i].Trigger));
         }
@@ -289,9 +301,9 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         initialBlock.Coord += Offset; //Apply offset
         if (initialBlock.Coord.X < 0 || initialBlock.Coord.X > 31 || initialBlock.Coord.Z < 0 || initialBlock.Coord.Z > 31) return null;
         if (initialBlock.Coord.Y < minimumHeight || initialBlock.Coord.Y >= 32) return null;
-        if (initialBlock.Skin != null) {  //Changing packdesc version (yes, this causes a crash if not done)
-            if (initialBlock.Skin.PackDesc != null) initialBlock.Skin.PackDesc = initialBlock.Skin.PackDesc with { Version = 2 };
-            if (initialBlock.Skin.ParentPackDesc != null) initialBlock.Skin.ParentPackDesc = initialBlock.Skin.ParentPackDesc with { Version = 2 };
+        if (initialBlock.Skin is not null) {  //Changing packdesc version (yes, this causes a crash if not done)
+            if (initialBlock.Skin.PackDesc is not null) initialBlock.Skin.PackDesc = initialBlock.Skin.PackDesc with { Version = 2 };
+            if (initialBlock.Skin.ParentPackDesc is not null) initialBlock.Skin.ParentPackDesc = initialBlock.Skin.ParentPackDesc with { Version = 2 };
             initialBlock.Skin.Text = "";
         }
         return initialBlock;
@@ -301,7 +313,7 @@ public class DowngraderTool : ITool, IHasOutput<NodeFile<CGameCtnChallenge>>, IH
         var newBlockList = new List<CGameCtnBlock>();
         foreach (var block in initialBlocks) {
             CGameCtnBlock? newBlock = DowngradeBlock(block);
-            if (newBlock != null) newBlockList.Add(newBlock);
+            if (newBlock is not null) newBlockList.Add(newBlock);
         }
         return newBlockList;
     }
