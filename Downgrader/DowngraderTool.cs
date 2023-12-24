@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Downgrader;
 
 [ToolName("Downgrader")]
-[ToolDescription("Downgrade a TM2 Stadium map to TMNF")]
+[ToolDescription("Downgrade a TM2 Stadium map to TMNF.")]
 [ToolAuthors("LinuxCat")]
 [ToolGitHub("LinUwUxCat/Downgrader")]
 [ToolAssets("Downgrader")]
