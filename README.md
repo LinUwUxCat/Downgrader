@@ -11,8 +11,6 @@ Features of Downgrader:
   - All mediatracker blocks except ghosts are supported
 - Ability to completely remove mediatracker if you want to
 
-[IMAGES]
-
 ## CLI build
 
 For 100% offline control, you can use the CLI version of Downgrader. Drag and drop your desired maps onto the DowngraderCLI(.exe).
